@@ -1,5 +1,7 @@
 package com.aifinance.backend.service;
 
+import com.aifinance.backend.dto.LoginResponse;
+import com.aifinance.backend.dto.RefreshTokenRequest;
 import com.aifinance.backend.dto.RegisterRequest;
 import com.aifinance.backend.entity.User;
 import com.aifinance.backend.repository.UserRepository;
@@ -18,11 +20,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
-    public AuthService(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtService jwtService) {
+    public AuthService(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtService jwtService,RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Transactional
@@ -43,8 +47,8 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public String login(LoginRequest request) {
-        String email = request.email().trim().toLowerCase(Locale.ROOT);
+    public LoginResponse login(LoginRequest request) {
+        String email = request.email().trim().toLowerCase();
 
         User user=userRepository.findByEmail(email)
                 .orElseThrow(()->new InvalidCredentialsException("Neispravan email ili lozinka"));
@@ -52,6 +56,36 @@ public class AuthService {
         if(!passwordEncoder.matches(request.password(),user.getPasswordHash())){
             throw new InvalidCredentialsException("Neispravan email ili lozinka");
         }
-        return jwtService.generateToken(user.getId());
+        String accesToken=jwtService.generateToken(user.getId());
+        String refreshToken=refreshTokenService.createRefreshToken(user);
+        return new LoginResponse(
+                accesToken,
+                refreshToken,
+                "Bearer"
+        );
+    }
+
+    @Transactional
+    public LoginResponse refresh(RefreshTokenRequest request){
+        User user=refreshTokenService.rotateRefreshToken(
+                request.refreshToken()
+        );
+
+        String accesToken=jwtService.generateToken(user.getId());
+
+        String refreshToken=refreshTokenService.createRefreshToken(user);
+
+        return new LoginResponse(
+                accesToken,
+                refreshToken,
+                "Bearer"
+        );
+    }
+
+    @Transactional
+    public void logout(RefreshTokenRequest request){
+        refreshTokenService.revokeRefreshToken(
+                request.refreshToken()
+        );
     }
 }
