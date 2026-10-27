@@ -4,6 +4,7 @@ import com.aifinance.backend.dto.CategoryRequest;
 import com.aifinance.backend.entity.Category;
 import com.aifinance.backend.entity.User;
 import com.aifinance.backend.repository.CategoryRepository;
+import com.aifinance.backend.repository.TransactionRepository;
 import com.aifinance.backend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,13 @@ import java.util.List;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private  final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
-    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository,TransactionRepository transactionRepository) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public List<Category> getSystemCategories() {
@@ -92,6 +95,10 @@ public class CategoryService {
 
         if(category.getUser()==null || category.getUser().getId()!=userId){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Kategorija nije pronađena");
+        }
+
+        if(transactionRepository.existsByCategory_Id(categoryId)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Kategorija se ne može obrisati jer ima povezane transakcije");
         }
         categoryRepository.delete(category);
     }
