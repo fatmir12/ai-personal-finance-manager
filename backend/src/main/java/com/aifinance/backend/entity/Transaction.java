@@ -25,6 +25,10 @@ public class Transaction {
     @JoinColumn(name="category_id",nullable = false)
     private Category category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id",nullable = false)
+    private Account account;
+
     @Column(name = "amount",nullable = false,precision = 10,scale = 2)
     private BigDecimal amount;
 

@@ -12,10 +12,13 @@ public record TransactionRequest(
         @NotNull(message = "Kategorija je obavezna")
         Long categoryId,
 
+        @NotNull(message = "Finansijski račun je obavetan")
+        Long accountId,
+
         @NotNull(message = "Iznos je obavezan")
         @DecimalMin(
                 value = "0.01",
-                message = "Inzos mora biti veći od nule"
+                message = "Iznos mora biti veći od nule"
         )
         @Digits(
                 integer = 8,
