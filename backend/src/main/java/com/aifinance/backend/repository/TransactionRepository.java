@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {
@@ -37,4 +38,22 @@ AND t.category.type='EXPENSE'
     );
 
     boolean existsByAccount_Id(Long accountId);
+
+
+    @Query("""
+    SELECT SUM(t.amount)
+    FROM Transaction t
+    WHERE t.user.id = :userId
+      AND t.category.id = :categoryId
+      AND t.category.type = 'EXPENSE'
+      AND t.transactionDate >= :startDate
+      AND t.transactionDate < :endDate
+    """)
+    BigDecimal sumExpensesByCategoryAndPeriod(
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
 }
