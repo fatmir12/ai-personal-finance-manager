@@ -9,6 +9,8 @@ public record TransactionResponse(
         Long categoryId,
         String categoryName,
         String type,
+        Long accountId,
+        String accountName,
         BigDecimal amount,
         String description,
         LocalDate transactionDate,
