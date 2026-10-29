@@ -40,4 +40,10 @@ public class Transaction {
 
     @Column(name="created_at",nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "recurring_rule_id")
+    private Long recurringRuleId;
+
+    @Column(name = "recurring_due_date")
+    private LocalDate recurringDueDate;
 }
