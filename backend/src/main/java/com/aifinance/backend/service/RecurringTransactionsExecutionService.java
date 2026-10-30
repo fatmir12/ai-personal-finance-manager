@@ -20,13 +20,19 @@ public class RecurringTransactionsExecutionService {
 
     private final RecurringTransactionRepository recurringRepository;
     private final TransactionRepository transactionRepository;
+    private final NotificationService notificationService;
+    private final BudgetAlertService budgetAlertService;
 
     public RecurringTransactionsExecutionService(
             RecurringTransactionRepository recurringRepository,
-            TransactionRepository transactionRepository
+            TransactionRepository transactionRepository,
+            NotificationService notificationService,
+            BudgetAlertService budgetAlertService
     ) {
         this.recurringRepository = recurringRepository;
         this.transactionRepository = transactionRepository;
+        this.notificationService = notificationService;
+        this.budgetAlertService = budgetAlertService;
     }
 
 
@@ -100,8 +106,18 @@ public class RecurringTransactionsExecutionService {
         transaction.setRecurringRuleId(rule.getId());
         transaction.setRecurringDueDate(dueDate);
 
+        if("EXPENSE".equals(rule.getCategory().getType())){
+            budgetAlertService.lockBudgetForExpense(
+                    rule.getUser().getId(),
+                    rule.getCategory().getId(),
+                    dueDate
+            );
+        }
 
-        transactionRepository.save(transaction);
+
+        Transaction savedTransaction = transactionRepository.save(transaction);
+        transactionRepository.flush();
+        budgetAlertService.checkAfterExpenseCreated(savedTransaction);
 
 
         LocalDate nextDate = switch (rule.getFrequency()) {
@@ -118,5 +134,17 @@ public class RecurringTransactionsExecutionService {
 
 
         recurringRepository.save(rule);
+
+        String notificationMessage="Automatski je evidentirana transakcija od "
+                + rule.getAmount()
+                + "KM. Opis: "
+                + rule.getDescription();
+
+        notificationService.createNotification(
+                rule.getUser(),
+                "Ponavljajuća transakcija izvršena",
+                notificationMessage,
+                "RECURRING_TRANSACTION"
+        );
     }
 }

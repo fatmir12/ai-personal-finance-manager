@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -28,17 +30,20 @@ public class TransactionService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final BudgetAlertService budgetAlertService;
 
     public TransactionService(
             TransactionRepository transactionRepository,
             CategoryRepository categoryRepository,
             UserRepository userRepository,
-            AccountRepository accountRepository
+            AccountRepository accountRepository,
+            BudgetAlertService budgetAlertService
     ) {
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
+        this.budgetAlertService = budgetAlertService;
     }
 
     @Transactional
@@ -66,7 +71,18 @@ public class TransactionService {
         transaction.setTransactionDate(request.transactionDate());
         transaction.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
 
+        if("EXPENSE".equals(category.getType())){
+            budgetAlertService.lockBudgetForExpense(
+                    userId,
+                    category.getId(),
+                    request.transactionDate()
+            );
+        }
+
         Transaction saved = transactionRepository.save(transaction);
+
+        transactionRepository.flush();
+        budgetAlertService.checkAfterExpenseCreated(saved);
 
         return toResponse(saved);
     }
@@ -104,6 +120,45 @@ public class TransactionService {
         Category category = findAllowedCategory(request.categoryId(), userId);
         Account account = findOwnedAccount(request.accountId(), userId);
 
+        BigDecimal previousAmount = transaction.getAmount();
+        Long previousCategoryId = transaction.getCategory().getId();
+        LocalDate previousDate=transaction.getTransactionDate();
+        String previousCategoryType = transaction.getCategory().getType();
+
+
+        boolean oldIsExpense =
+                "EXPENSE".equals(transaction.getCategory().getType());
+
+        boolean newIsExpense =
+                "EXPENSE".equals(category.getType());
+
+        if (oldIsExpense && newIsExpense) {
+
+            budgetAlertService.lockBudgetsForUpdate(
+                    userId,
+                    previousCategoryId,
+                    previousDate,
+                    category.getId(),
+                    request.transactionDate()
+            );
+
+        } else if (oldIsExpense) {
+
+            budgetAlertService.lockBudgetForExpense(
+                    userId,
+                    previousCategoryId,
+                    previousDate
+            );
+
+        } else if (newIsExpense) {
+
+            budgetAlertService.lockBudgetForExpense(
+                    userId,
+                    category.getId(),
+                    request.transactionDate()
+            );
+        }
+
         transaction.setCategory(category);
         transaction.setAccount(account);
         transaction.setAmount(request.amount());
@@ -112,6 +167,14 @@ public class TransactionService {
 
         Transaction saved = transactionRepository.save(transaction);
 
+        transactionRepository.flush();
+        budgetAlertService.checkAfterExpenseUpdated(
+                saved,
+                previousAmount,
+                previousCategoryId,
+                previousDate,
+                previousCategoryType
+        );
         return toResponse(saved);
     }
 
