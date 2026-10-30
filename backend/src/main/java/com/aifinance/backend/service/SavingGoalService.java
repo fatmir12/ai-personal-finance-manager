@@ -21,10 +21,12 @@ import java.util.List;
 public class SavingGoalService {
     private final SavingGoalRepository savingGoalRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public SavingGoalService(SavingGoalRepository savingGoalRepository, UserRepository userRepository) {
+    public SavingGoalService(SavingGoalRepository savingGoalRepository, UserRepository userRepository, NotificationService notificationService) {
         this.savingGoalRepository = savingGoalRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
     @Transactional
     public SavingGoalResponse createSavingGoal(SavingGoalRequest request,Long userId) {
@@ -57,11 +59,13 @@ public class SavingGoalService {
             SavingGoalRequest request,
             Long userId
     ){
-        SavingGoal savingGoal=savingGoalRepository.findById(goalId)
+        SavingGoal savingGoal=savingGoalRepository.findByIdForUpdate(goalId)
                 .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Cilj štednje nije pronađen"));
         if(savingGoal.getUser().getId()!=userId){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Cilj štednje nije pronađen");
         }
+
+        boolean wasCompleted=savingGoal.getCurrentAmount().compareTo(savingGoal.getTargetAmount())>=0;
 
         savingGoal.setName(request.name().trim());
         savingGoal.setTargetAmount(request.targetAmount());
@@ -69,6 +73,22 @@ public class SavingGoalService {
         savingGoal.setTargetDate(request.targetDate());
 
         SavingGoal saved=savingGoalRepository.save(savingGoal);
+        boolean isCompleted=saved.getCurrentAmount().compareTo(saved.getTargetAmount())>=0;
+
+        if(!wasCompleted && isCompleted){
+            String message=
+                    "Uspješno si ostvario cilj štednje \""
+                    + saved.getName()
+                    + "\" i dostigao planirani iznos od "
+                    + saved.getCurrentAmount()
+                    + " KM.";
+            notificationService.createNotification(
+                    saved.getUser(),
+                    "Cilj štednje ostvaren",
+                    message,
+                    "SAVING_GOAL"
+            );
+        }
 
         return toResponse(saved);
     }
