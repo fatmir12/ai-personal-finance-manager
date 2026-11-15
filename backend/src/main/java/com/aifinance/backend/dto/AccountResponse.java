@@ -1,3 +1,4 @@
+
 package com.aifinance.backend.dto;
 
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ public record AccountResponse(
         String name,
         String type,
         BigDecimal initialBalance,
-        BigDecimal currectBalance,
-        LocalDateTime created_at
+        BigDecimal currentBalance,
+        LocalDateTime createdAt
 ) {
 }

@@ -56,4 +56,51 @@ AND t.category.type='EXPENSE'
             @Param("endDate") LocalDate endDate
     );
 
+
+    @Query("""
+    SELECT COALESCE(SUM(t.amount), 0)
+    FROM Transaction t
+    WHERE t.user.id = :userId
+      AND t.category.type = 'INCOME'
+      AND t.transactionDate >= :startDate
+      AND t.transactionDate < :endDate
+    """)
+    BigDecimal sumIncomeByUserAndPeriod(
+            @Param("userId") Long userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
+    @Query("""
+    SELECT COALESCE(SUM(t.amount), 0)
+    FROM Transaction t
+    WHERE t.user.id = :userId
+      AND t.category.type = 'EXPENSE'
+      AND t.transactionDate >= :startDate
+      AND t.transactionDate < :endDate
+    """)
+    BigDecimal sumExpenseByUserAndPeriod(
+            @Param("userId") Long userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
+
+
+    @Query("""
+    SELECT t.category.name, SUM(t.amount)
+    FROM Transaction t
+    WHERE t.user.id = :userId
+      AND t.category.type = 'EXPENSE'
+      AND t.transactionDate >= :startDate
+      AND t.transactionDate < :endDate
+    GROUP BY t.category.id, t.category.name
+    ORDER BY SUM(t.amount) DESC
+    """)
+    List<Object[]> findExpensesByCategoryAndPeriod(
+            @Param("userId") Long userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
 }
