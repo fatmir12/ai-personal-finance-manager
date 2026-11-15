@@ -53,4 +53,12 @@ public interface BudgetRepository extends JpaRepository<Budget,Long> {
             @Param("year") Integer year
     );
 
+
+    List<Budget> findByUser_IdAndMonthAndYear(
+            Long userId,
+            Integer month,
+            Integer year
+    );
+
+
 }
