@@ -1,3 +1,4 @@
+
 package com.aifinance.backend.dto;
 
 import jakarta.validation.constraints.Email;
@@ -5,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record RegisterRequest(
+
         @NotBlank(message = "Ime je obavezno")
         String firstName,
 
@@ -16,8 +18,11 @@ public record RegisterRequest(
         String email,
 
         @NotBlank(message = "Lozinka je obavezna")
-        @Size(min=8, message = "Lozinka mora imati najmanje 6 karaktera")
+        @Size(
+                min = 8,
+                message = "Lozinka mora imati najmanje 8 karaktera"
+        )
         String password
-) {
 
+) {
 }
