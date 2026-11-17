@@ -12,6 +12,8 @@ import AccountsPage from './pages/AccountsPage.jsx'
 import TransactionsPage from './pages/TransactionsPage.jsx'
 import BudgetsPage from './pages/BudgetsPage.jsx'
 import SavingGoalsPage from './pages/SavingGoalsPage.jsx'
+import RecurringTransactionsPage from './pages/RecurringTransactionsPage.jsx'
+import NotificationsPage from './pages/NotificationsPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 import { useAuth } from './hooks/useAuth.js'
@@ -61,6 +63,14 @@ function App() {
         <Route
           path="/saving-goals"
           element={<SavingGoalsPage />}
+        />
+        <Route
+          path="/recurring-transactions"
+          element={<RecurringTransactionsPage />}
+        />
+        <Route
+          path="/notifications"
+          element={<NotificationsPage />}
         />
       </Route>
 
