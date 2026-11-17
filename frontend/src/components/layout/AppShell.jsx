@@ -49,7 +49,7 @@ const navigationGroups = [
   {
     label: 'ASISTENT',
     items: [
-      { label: 'Finansijski uvidi', icon: Sparkles },
+      { label: 'Finansijski uvidi', icon: Sparkles, href: '/assistant' },
     ],
   },
 ]
