@@ -1,0 +1,346 @@
+.planning-page .finance-page-header {
+  margin-top: 19px;
+}
+
+.planning-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(230px, 0.8fr);
+  gap: 13px;
+}
+
+.planning-summary-card {
+  position: relative;
+  min-height: 137px;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+  padding: 18px 22px;
+  border: 1px solid var(--app-border);
+  border-radius: 11px;
+  background: var(--app-paper);
+  box-shadow: 0 2px 6px rgb(34 49 37 / 2%);
+}
+
+.planning-summary-card > span {
+  color: var(--app-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.planning-summary-card > strong {
+  color: var(--app-forest);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.planning-summary-card > p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 9px;
+}
+
+.planning-summary-feature {
+  border-color: #244b3e;
+  background:
+    radial-gradient(ellipse at 92% 10%, rgb(108 143 112 / 28%), transparent 34%),
+    #19382f;
+}
+
+.planning-summary-feature > span,
+.planning-summary-feature > p {
+  color: #b7c8b9;
+}
+
+.planning-summary-feature > strong {
+  color: #fbfaf2;
+  font-size: 31px;
+}
+
+.planning-summary-art {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  display: grid;
+  width: 49px;
+  height: 49px;
+  place-items: center;
+  border: 1px solid rgb(215 229 138 / 24%);
+  border-radius: 15px;
+  color: var(--app-lime);
+  transform: translateY(-50%);
+}
+
+.planning-section-heading {
+  align-items: flex-end;
+}
+
+.period-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--app-green);
+}
+
+.period-picker input {
+  width: 143px;
+  height: 34px;
+  padding: 5px 8px;
+  border-color: var(--app-border);
+  border-radius: 7px;
+  background: var(--app-paper);
+  color: #4a594d;
+  font-size: 9px;
+}
+
+.budget-card-grid,
+.saving-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.budget-card,
+.saving-goal-card {
+  min-width: 0;
+  min-height: 201px;
+  gap: 12px;
+  padding: 17px 18px 14px;
+  border: 1px solid var(--app-border);
+  border-radius: 11px;
+  background: var(--app-paper);
+  box-shadow: 0 2px 6px rgb(34 49 37 / 2%);
+}
+
+.budget-card-top,
+.saving-goal-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.budget-category-symbol,
+.saving-goal-symbol {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: #e9efe5;
+  color: #41694d;
+}
+
+.budget-category-symbol.is-over {
+  background: #f7e9e1;
+  color: #a45b3e;
+}
+
+.planning-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.planning-card-actions button {
+  color: #899187;
+}
+
+.planning-delete-action:hover {
+  color: #a3523b;
+}
+
+.budget-card-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.budget-card-title h3,
+.saving-goal-title h3 {
+  overflow: hidden;
+  margin: 0;
+  color: #34493b;
+  font-size: 12px;
+  font-weight: 620;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.budget-card-title > span {
+  flex: 0 0 auto;
+  color: #7d877c;
+  font-size: 9px;
+}
+
+.budget-progress-labels,
+.goal-progress-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #7c857a;
+  font-size: 9px;
+}
+
+.budget-progress-labels strong,
+.goal-progress-labels strong {
+  color: #56775a;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.budget-progress-labels strong.is-over {
+  color: #a45b3e;
+}
+
+.planning-progress-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #eceee6;
+}
+
+.planning-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #6d9472, #9fb77a);
+  transition: width 180ms ease;
+}
+
+.planning-progress-fill.is-over {
+  background: linear-gradient(90deg, #c17b57, #d6a177);
+}
+
+.budget-remaining {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #608060;
+  font-size: 9px;
+}
+
+.budget-remaining.is-over {
+  color: #a45b3e;
+}
+
+.saving-goal-card {
+  min-height: 235px;
+}
+
+.saving-goal-card.is-complete {
+  border-color: #d8e1d2;
+  background: linear-gradient(145deg, #fffefa, #f8faf2);
+}
+
+.saving-goal-symbol {
+  background: #e9efe5;
+  color: #557560;
+}
+
+.saving-goal-symbol.is-complete {
+  background: #dcebd8;
+  color: #46754d;
+}
+
+.saving-goal-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.saving-goal-title h3 {
+  font-size: 13px;
+}
+
+.saving-goal-title > span {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border-radius: 20px;
+  background: #f1f2eb;
+  color: #818a7d;
+  font-size: 8px;
+}
+
+.saving-goal-title > .goal-complete-label {
+  background: #e6f0e2;
+  color: #4b7450;
+}
+
+.saving-goal-amounts {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.saving-goal-amounts strong {
+  color: var(--app-forest);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.saving-goal-amounts span {
+  color: #8a9287;
+  font-size: 9px;
+}
+
+.goal-progress-fill {
+  background: linear-gradient(90deg, #688b72, #a4b777);
+}
+
+.goal-progress-fill.is-complete {
+  background: linear-gradient(90deg, #497653, #8ca86d);
+}
+
+.saving-goal-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  color: #899187;
+  font-size: 9px;
+}
+
+.saving-goal-card-footer svg {
+  color: #82927d;
+}
+
+@media (max-width: 760px) {
+  .budget-card-grid,
+  .saving-goal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .planning-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .planning-summary-card {
+    min-height: 112px;
+    padding: 15px 18px;
+  }
+
+  .planning-summary-card > strong,
+  .planning-summary-feature > strong {
+    font-size: 24px;
+  }
+
+  .planning-summary-art {
+    right: 17px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .planning-section-heading {
+    align-items: flex-end;
+    flex-direction: row;
+  }
+}

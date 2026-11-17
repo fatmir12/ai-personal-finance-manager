@@ -32,8 +32,8 @@ const navigationGroups = [
   {
     label: 'PLANIRANJE',
     items: [
-      { label: 'Budžeti', icon: ChartNoAxesCombined },
-      { label: 'Ciljevi štednje', icon: Target },
+      { label: 'Budžeti', icon: ChartNoAxesCombined, href: '/budgets' },
+      { label: 'Ciljevi štednje', icon: Target, href: '/saving-goals' },
       { label: 'Ponavljanja', icon: Repeat2 },
     ],
   },
