@@ -10,9 +10,11 @@
   top: 0;
   display: flex;
   height: 100vh;
-  min-height: 640px;
+  height: 100dvh;
+  min-height: 0;
   flex-direction: column;
   padding: 28px 18px 20px;
+  overflow: hidden;
   background: var(--app-forest);
   color: #f5f4ed;
 }
@@ -57,8 +59,21 @@
 .app-navigation {
   display: flex;
   flex: 1;
+  min-height: 0;
   flex-direction: column;
   gap: 27px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-color: #587366 transparent;
+  scrollbar-width: thin;
+}
+
+.app-navigation-group {
+  flex: 0 0 auto;
+}
+
+.app-sidebar-bottom {
+  flex: 0 0 auto;
 }
 
 .app-navigation-group h2 {
@@ -129,15 +144,28 @@
 
 .app-logout-button {
   width: 100%;
+  min-height: 40px;
   justify-content: flex-start;
   gap: 11px;
-  background: transparent;
-  color: #e0b59b;
+  border: 1px solid #52735f;
+  border-radius: 9px;
+  background: #29453b;
+  color: #d7e58a;
 }
 
 .app-logout-button:hover {
-  background: rgb(224 181 155 / 12%);
-  color: #f2cdb8;
+  border-color: var(--app-lime);
+  background: #355844;
+  color: #f6f7ee;
+}
+
+.app-logout-button svg {
+  color: var(--app-lime);
+}
+
+.app-logout-button:focus-visible {
+  outline: 2px solid var(--app-lime);
+  outline-offset: 2px;
 }
 
 .app-main {
@@ -185,12 +213,16 @@
   }
 
   .app-sidebar-caption,
-  .app-sidebar-bottom,
+  .app-sidebar-bottom {
+    display: none;
+  }
+
   .app-navigation {
-    display: flex;
+    flex: 0 0 auto;
     flex-direction: row;
     margin-top: 13px;
     overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .app-navigation-group {
