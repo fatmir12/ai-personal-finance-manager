@@ -7,6 +7,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { formatBosnianMonth } from '@/lib/financeFormatters.js'
 
 const amountFormatter = new Intl.NumberFormat('bs-BA', {
   style: 'currency',
@@ -19,6 +20,16 @@ const compactAmountFormatter = new Intl.NumberFormat('bs-BA', {
   maximumFractionDigits: 1,
 })
 
+function formatMonthLabel(label) {
+  const match = /^M\s*(1[0-2]|[1-9])$/i.exec(String(label))
+
+  if (!match) {
+    return label
+  }
+
+  return formatBosnianMonth(new Date(2026, Number(match[1]) - 1, 1))
+}
+
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) {
     return null
@@ -26,7 +37,7 @@ function ChartTooltip({ active, payload, label }) {
 
   return (
     <div className="dashboard-chart-tooltip">
-      <span>{label}</span>
+      <span>{formatMonthLabel(label)}</span>
       {payload.map((item) => (
         <strong className={`tooltip-${item.dataKey}`} key={item.dataKey}>
           <i />
@@ -60,6 +71,7 @@ function FinanceTrendChart({ data }) {
           axisLine={false}
           dataKey="label"
           tick={{ fill: '#8a9188', fontSize: 10 }}
+          tickFormatter={formatMonthLabel}
           tickLine={false}
           tickMargin={11}
         />

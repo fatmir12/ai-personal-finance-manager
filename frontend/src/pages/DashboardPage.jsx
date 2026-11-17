@@ -13,6 +13,7 @@ import AppShell from '@/components/layout/AppShell.jsx'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth.js'
+import { formatBosnianDate, formatBosnianMonth } from '@/lib/financeFormatters.js'
 import { getDashboardData } from '@/services/dashboardService.js'
 
 import '../styles/DashboardPage.css'
@@ -25,15 +26,6 @@ const amountFormatter = new Intl.NumberFormat('bs-BA', {
   style: 'currency',
   currency: 'BAM',
   maximumFractionDigits: 2,
-})
-
-const dateFormatter = new Intl.DateTimeFormat('bs-BA', {
-  day: 'numeric',
-  month: 'short',
-})
-
-const monthFormatter = new Intl.DateTimeFormat('bs-BA', {
-  month: 'long',
 })
 
 function toAmount(value) {
@@ -64,7 +56,7 @@ function getMonthlyData(transactions) {
 
     return {
       key: getMonthKey(date),
-      label: monthFormatter.format(date),
+      label: formatBosnianMonth(date),
       prihod: 0,
       rashod: 0,
     }
@@ -181,11 +173,7 @@ function DashboardPage() {
   )
 
   const maxCategoryAmount = summary.expensesByCategory[0]?.amount || 1
-  const todayLabel = new Intl.DateTimeFormat('bs-BA', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  }).format(new Date())
+  const todayLabel = formatBosnianDate(new Date(), { includeWeekday: true })
 
   const handleRetry = () => {
     setIsLoading(true)
@@ -406,7 +394,7 @@ function DashboardPage() {
                             <span>{transaction.categoryName || 'Ostalo'} · {transaction.accountName || 'Račun'}</span>
                           </span>
                           <span className="transaction-date">
-                            {dateFormatter.format(toDate(transaction.transactionDate))}
+                            {formatBosnianDate(toDate(transaction.transactionDate))}
                           </span>
                           <strong className={`transaction-amount ${isIncome ? 'is-income' : 'is-expense'}`}>
                             {formatSignedAmount(toAmount(transaction.amount), transaction.type)}

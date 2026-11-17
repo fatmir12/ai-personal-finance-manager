@@ -10,8 +10,10 @@
   top: 0;
   display: flex;
   height: 100vh;
-  min-height: 640px;
+  min-height: 0;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 28px 18px 20px;
   background: var(--app-forest);
   color: #f5f4ed;
@@ -129,15 +131,21 @@
 
 .app-logout-button {
   width: 100%;
+  min-height: 40px;
   justify-content: flex-start;
   gap: 11px;
-  background: transparent;
-  color: #e0b59b;
+  border-radius: 9px;
+  background: #29453b;
+  color: #f6f7ee;
+}
+
+.app-logout-button svg {
+  color: var(--app-lime);
 }
 
 .app-logout-button:hover {
-  background: rgb(224 181 155 / 12%);
-  color: #f2cdb8;
+  background: #355749;
+  color: white;
 }
 
 .app-main {

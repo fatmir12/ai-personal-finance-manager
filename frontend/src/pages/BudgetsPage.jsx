@@ -15,7 +15,7 @@ import { Card } from '@/components/ui/card'
 import Dialog from '@/components/ui/dialog.jsx'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { formatMoney } from '@/lib/financeFormatters.js'
+import { formatBosnianMonth, formatMoney } from '@/lib/financeFormatters.js'
 import { useAuth } from '@/hooks/useAuth.js'
 import {
   createBudget,
@@ -105,10 +105,7 @@ function BudgetsPage() {
   const expenseCategories = categories.filter(
     (category) => category.type === 'EXPENSE'
   )
-  const monthLabel = new Intl.DateTimeFormat('bs-BA', {
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(year, month - 1, 1))
+  const monthLabel = `${formatBosnianMonth(new Date(year, month - 1, 1))} ${year}.`
 
   const openCreateDialog = () => {
     setFormData({

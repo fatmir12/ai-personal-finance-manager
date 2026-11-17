@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Dialog from '@/components/ui/dialog.jsx'
 import { useAuth } from '@/hooks/useAuth.js'
+import { formatBosnianDateTime } from '@/lib/financeFormatters.js'
 import {
   deleteNotification,
   getNotifications,
@@ -30,14 +31,6 @@ const notificationTypes = {
   SAVING_GOAL: { label: 'Cilj štednje', icon: Goal },
   RECURRING_TRANSACTION: { label: 'Ponavljanje', icon: Repeat2 },
 }
-
-const dateTimeFormatter = new Intl.DateTimeFormat('bs-BA', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-})
 
 function NotificationsPage() {
   const { accessToken } = useAuth()
@@ -228,7 +221,7 @@ function NotificationsPage() {
                         <span>{notificationType.label}</span>
                         <span className="notification-date">
                           <CalendarDays aria-hidden="true" size={12} />
-                          {dateTimeFormatter.format(new Date(notification.createdAt))}
+                          {formatBosnianDateTime(notification.createdAt)}
                         </span>
                       </div>
                       <h3>{notification.title}</h3>
