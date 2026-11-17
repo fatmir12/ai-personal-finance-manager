@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router'
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -288,11 +289,11 @@ function RecurringTransactionsPage() {
           </div>
           <Button
             className="finance-primary-action"
-            disabled={!accounts.length || !categories.length}
+            disabled={isLoading || Boolean(error)}
             onClick={openCreateDialog}
           >
             <Plus aria-hidden="true" size={16} />
-            Novo ponavljanje
+            {isLoading ? 'Učitavanje…' : 'Novo ponavljanje'}
           </Button>
         </header>
 
@@ -517,6 +518,18 @@ function RecurringTransactionsPage() {
           </div>
         ) : (
           <form className="finance-dialog-form" onSubmit={handleSubmit}>
+            {!accounts.length && (
+              <p className="finance-form-error" role="alert">
+                Za kreiranje ponavljanja prvo dodajte račun.{' '}
+                <Link to="/accounts">Dodajte račun</Link>.
+              </p>
+            )}
+            {!availableCategories.length && (
+              <p className="finance-form-error" role="alert">
+                Nema dostupnih kategorija za odabranu vrstu transakcije.
+                Odaberite drugu vrstu ako su za nju dostupne kategorije.
+              </p>
+            )}
             <div className="finance-form-field">
               <Label htmlFor="recurring-type">Vrsta</Label>
               <select
@@ -663,7 +676,11 @@ function RecurringTransactionsPage() {
               <Button disabled={isSaving} onClick={closeDialog} type="button" variant="outline">
                 Odustani
               </Button>
-              <Button className="finance-primary-action" disabled={isSaving} type="submit">
+              <Button
+                className="finance-primary-action"
+                disabled={isSaving || !accounts.length || !availableCategories.length}
+                type="submit"
+              >
                 {isSaving
                   ? 'Čuvanje…'
                   : dialog?.mode === 'edit'

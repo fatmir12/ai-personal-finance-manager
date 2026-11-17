@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
 import {
   ArrowDownLeft,
   ArrowRight,
@@ -34,7 +33,7 @@ const dateFormatter = new Intl.DateTimeFormat('bs-BA', {
 })
 
 const monthFormatter = new Intl.DateTimeFormat('bs-BA', {
-  month: 'short',
+  month: 'long',
 })
 
 function toAmount(value) {
@@ -65,7 +64,7 @@ function getMonthlyData(transactions) {
 
     return {
       key: getMonthKey(date),
-      label: monthFormatter.format(date).replace('.', ''),
+      label: monthFormatter.format(date),
       prihod: 0,
       rashod: 0,
     }
@@ -119,12 +118,10 @@ function getCurrentMonthSummary(transactions) {
 }
 
 function DashboardPage() {
-  const navigate = useNavigate()
-  const { accessToken, logout } = useAuth()
+  const { accessToken } = useAuth()
   const [dashboardData, setDashboardData] = useState(null)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
@@ -196,26 +193,8 @@ function DashboardPage() {
     setReloadKey((key) => key + 1)
   }
 
-  const handleLogout = async () => {
-    if (isLoggingOut) {
-      return
-    }
-
-    setIsLoggingOut(true)
-
-    try {
-      await logout()
-      navigate('/login', { replace: true })
-    } catch {
-      navigate('/login', {
-        replace: true,
-        state: { logoutWarning: true },
-      })
-    }
-  }
-
   return (
-    <AppShell isLoggingOut={isLoggingOut} onLogout={handleLogout}>
+    <AppShell>
       <div className="dashboard-page">
         <header className="dashboard-topbar">
           <div className="dashboard-breadcrumb">
