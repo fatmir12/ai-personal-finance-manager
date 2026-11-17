@@ -9,7 +9,7 @@ import {
   Target,
   WalletCards,
 } from 'lucide-react'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 
@@ -19,14 +19,14 @@ const navigationGroups = [
   {
     label: 'PREGLED',
     items: [
-      { label: 'Početna', icon: House, href: '/dashboard', active: true },
+      { label: 'Početna', icon: House, href: '/dashboard' },
     ],
   },
   {
     label: 'FINANSIJE',
     items: [
-      { label: 'Računi', icon: WalletCards },
-      { label: 'Transakcije', icon: ArrowLeftRight },
+      { label: 'Računi', icon: WalletCards, href: '/accounts' },
+      { label: 'Transakcije', icon: ArrowLeftRight, href: '/transactions' },
     ],
   },
   {
@@ -46,6 +46,8 @@ const navigationGroups = [
 ]
 
 function AppShell({ children, isLoggingOut, onLogout }) {
+  const { pathname } = useLocation()
+
   return (
     <div className="app-shell">
       <aside className="app-sidebar">
@@ -67,12 +69,12 @@ function AppShell({ children, isLoggingOut, onLogout }) {
             <section className="app-navigation-group" key={group.label}>
               <h2 className="app-navigation-label">{group.label}</h2>
               <ul>
-                {group.items.map(({ active, href, icon: Icon, label }) => (
+                {group.items.map(({ href, icon: Icon, label }) => (
                   <li key={label}>
-                    {active ? (
+                    {href ? (
                       <Link
-                        aria-current="page"
-                        className="app-navigation-link is-active"
+                        aria-current={pathname === href ? 'page' : undefined}
+                        className={`app-navigation-link${pathname === href ? ' is-active' : ''}`}
                         to={href}
                       >
                         <Icon aria-hidden="true" size={18} strokeWidth={1.8} />

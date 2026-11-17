@@ -190,9 +190,14 @@
   }
 
   .app-navigation {
-    display: block;
+    display: flex;
+    flex-direction: row;
     margin-top: 13px;
     overflow-x: auto;
+  }
+
+  .app-navigation-group {
+    flex: 0 0 auto;
   }
 
   .app-navigation-group ul {

@@ -8,6 +8,8 @@ import {
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import DashboardPage from './pages/DashboardPage.jsx'
+import AccountsPage from './pages/AccountsPage.jsx'
+import TransactionsPage from './pages/TransactionsPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 import { useAuth } from './hooks/useAuth.js'
@@ -41,6 +43,14 @@ function App() {
         <Route
           path="/dashboard"
           element={<DashboardPage />}
+        />
+        <Route
+          path="/accounts"
+          element={<AccountsPage />}
+        />
+        <Route
+          path="/transactions"
+          element={<TransactionsPage />}
         />
       </Route>
 
