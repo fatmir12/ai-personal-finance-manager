@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   ArrowLeftRight,
   Bell,
@@ -10,9 +11,10 @@ import {
   Target,
   WalletCards,
 } from 'lucide-react'
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/hooks/useAuth.js'
 
 import './AppShell.css'
 
@@ -52,8 +54,29 @@ const navigationGroups = [
   },
 ]
 
-function AppShell({ children, isLoggingOut, onLogout }) {
+function AppShell({ children }) {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) {
+      return
+    }
+
+    setIsLoggingOut(true)
+
+    try {
+      await logout()
+      navigate('/login', { replace: true })
+    } catch {
+      navigate('/login', {
+        replace: true,
+        state: { logoutWarning: true },
+      })
+    }
+  }
 
   return (
     <div className="app-shell">
@@ -112,7 +135,7 @@ function AppShell({ children, isLoggingOut, onLogout }) {
           <Button
             className="app-logout-button"
             disabled={isLoggingOut}
-            onClick={onLogout}
+            onClick={handleLogout}
             variant="ghost"
           >
             <LogOut aria-hidden="true" size={17} />

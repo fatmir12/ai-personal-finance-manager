@@ -131,12 +131,13 @@
   width: 100%;
   justify-content: flex-start;
   gap: 11px;
-  color: #bdc9c1;
+  background: transparent;
+  color: #e0b59b;
 }
 
 .app-logout-button:hover {
-  background: rgb(255 255 255 / 8%);
-  color: white;
+  background: rgb(224 181 155 / 12%);
+  color: #f2cdb8;
 }
 
 .app-main {
