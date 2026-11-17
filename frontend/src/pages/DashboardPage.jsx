@@ -7,11 +7,19 @@ import {
   CircleAlert,
   Landmark,
   RotateCw,
+  Search,
+  Sparkles,
   Wallet,
 } from 'lucide-react'
+import { useNavigate } from 'react-router'
 import AppShell from '@/components/layout/AppShell.jsx'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import {
+  formatFinanceLongDate,
+  formatFinanceMonth,
+  formatFinanceShortDate,
+} from '@/lib/financeFormatters.js'
 import { useAuth } from '@/hooks/useAuth.js'
 import { getDashboardData } from '@/services/dashboardService.js'
 
@@ -25,15 +33,6 @@ const amountFormatter = new Intl.NumberFormat('bs-BA', {
   style: 'currency',
   currency: 'BAM',
   maximumFractionDigits: 2,
-})
-
-const dateFormatter = new Intl.DateTimeFormat('bs-BA', {
-  day: 'numeric',
-  month: 'short',
-})
-
-const monthFormatter = new Intl.DateTimeFormat('bs-BA', {
-  month: 'long',
 })
 
 function toAmount(value) {
@@ -64,7 +63,7 @@ function getMonthlyData(transactions) {
 
     return {
       key: getMonthKey(date),
-      label: monthFormatter.format(date),
+      label: formatFinanceMonth(date),
       prihod: 0,
       rashod: 0,
     }
@@ -119,10 +118,12 @@ function getCurrentMonthSummary(transactions) {
 
 function DashboardPage() {
   const { accessToken } = useAuth()
+  const navigate = useNavigate()
   const [dashboardData, setDashboardData] = useState(null)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [reloadKey, setReloadKey] = useState(0)
+  const [aiQuery, setAiQuery] = useState('')
 
   useEffect(() => {
     const controller = new AbortController()
@@ -181,11 +182,20 @@ function DashboardPage() {
   )
 
   const maxCategoryAmount = summary.expensesByCategory[0]?.amount || 1
-  const todayLabel = new Intl.DateTimeFormat('bs-BA', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  }).format(new Date())
+  const todayLabel = formatFinanceLongDate(new Date())
+
+  const handleAiSearch = (event) => {
+    event.preventDefault()
+    const prompt = aiQuery.trim()
+
+    if (!prompt) {
+      return
+    }
+
+    navigate('/assistant', {
+      state: { aiPrompt: prompt, autoSend: true },
+    })
+  }
 
   const handleRetry = () => {
     setIsLoading(true)
@@ -220,6 +230,39 @@ function DashboardPage() {
             <span className="dashboard-period-dot" />
             Ovaj mjesec
           </div>
+        </section>
+
+        <section aria-label="Pitaj Saldo AI" className="dashboard-ai-search">
+          <div className="dashboard-ai-search-copy">
+            <span className="dashboard-ai-mark">
+              <Sparkles aria-hidden="true" size={17} />
+            </span>
+            <div>
+              <p className="dashboard-eyebrow">SALDO AI</p>
+              <h2>Pitaj o svojim finansijama.</h2>
+              <span>Odgovori zasnovani na tvojim podacima.</span>
+            </div>
+          </div>
+          <form className="dashboard-ai-search-form" onSubmit={handleAiSearch}>
+            <label className="dashboard-ai-search-input">
+              <span className="sr-only">Pitanje za Saldo AI asistenta</span>
+              <Search aria-hidden="true" size={17} />
+              <input
+                maxLength={10000}
+                onChange={(event) => setAiQuery(event.target.value)}
+                placeholder="Npr. koliko sam potrošio ovaj mjesec?"
+                value={aiQuery}
+              />
+            </label>
+            <Button
+              className="dashboard-ai-search-submit"
+              disabled={!aiQuery.trim()}
+              type="submit"
+            >
+              Pitaj AI
+              <ArrowRight aria-hidden="true" size={15} />
+            </Button>
+          </form>
         </section>
 
         <section aria-label="Ukupni saldo" className="dashboard-balance-banner">
@@ -406,7 +449,7 @@ function DashboardPage() {
                             <span>{transaction.categoryName || 'Ostalo'} · {transaction.accountName || 'Račun'}</span>
                           </span>
                           <span className="transaction-date">
-                            {dateFormatter.format(toDate(transaction.transactionDate))}
+                            {formatFinanceShortDate(toDate(transaction.transactionDate))}
                           </span>
                           <strong className={`transaction-amount ${isIncome ? 'is-income' : 'is-expense'}`}>
                             {formatSignedAmount(toAmount(transaction.amount), transaction.type)}

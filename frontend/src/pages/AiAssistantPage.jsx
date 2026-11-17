@@ -10,6 +10,7 @@ import {
   Sparkles,
   Trash2,
 } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router'
 
 import AppShell from '@/components/layout/AppShell.jsx'
 import { Button } from '@/components/ui/button'
@@ -86,10 +87,18 @@ function getConversationTitle(content) {
 
 function AiAssistantPage() {
   const { accessToken } = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const initialPrompt =
+    typeof location.state?.aiPrompt === 'string'
+      ? location.state.aiPrompt
+      : ''
+  const [startWithNewConversation] = useState(Boolean(initialPrompt.trim()))
+  const [autoSendPrompt] = useState(Boolean(location.state?.autoSend))
   const [conversations, setConversations] = useState([])
   const [selectedConversationId, setSelectedConversationId] = useState(null)
   const [messages, setMessages] = useState([])
-  const [composer, setComposer] = useState('')
+  const [composer, setComposer] = useState(initialPrompt)
   const [isLoadingConversations, setIsLoadingConversations] = useState(true)
   const [isLoadingMessages, setIsLoadingMessages] = useState(false)
   const [isSending, setIsSending] = useState(false)
@@ -100,6 +109,9 @@ function AiAssistantPage() {
   const messageLoadVersion = useRef(0)
   const skipMessageLoadFor = useRef(null)
   const messageEndRef = useRef(null)
+  const startWithNewConversationRef = useRef(startWithNewConversation)
+  const autoSendPromptRef = useRef(autoSendPrompt)
+  const composerFormRef = useRef(null)
   const selectedConversation = conversations.find(
     (conversation) =>
       String(conversation.id) === String(selectedConversationId)
@@ -114,7 +126,7 @@ function AiAssistantPage() {
         if (active) {
           setConversations(result)
           setConversationError('')
-          if (result.length > 0) {
+          if (result.length > 0 && !startWithNewConversationRef.current) {
             setIsLoadingMessages(true)
             setSelectedConversationId(result[0].id)
           }
@@ -138,6 +150,23 @@ function AiAssistantPage() {
       controller.abort()
     }
   }, [accessToken])
+
+  useEffect(() => {
+    if (location.state?.aiPrompt) {
+      navigate(location.pathname, { replace: true, state: null })
+    }
+  }, [location.pathname, location.state, navigate])
+
+  useEffect(() => {
+    if (
+      !isLoadingConversations &&
+      autoSendPromptRef.current &&
+      composer.trim()
+    ) {
+      autoSendPromptRef.current = false
+      composerFormRef.current?.requestSubmit()
+    }
+  }, [composer, isLoadingConversations])
 
   useEffect(() => {
     if (selectedConversationId === null) {
@@ -530,7 +559,11 @@ function AiAssistantPage() {
               )}
             </div>
 
-            <form className="ai-composer" onSubmit={handleSubmit}>
+            <form
+              className="ai-composer"
+              onSubmit={handleSubmit}
+              ref={composerFormRef}
+            >
               <label className="sr-only" htmlFor="ai-message">
                 Napiši poruku za finansijskog asistenta
               </label>

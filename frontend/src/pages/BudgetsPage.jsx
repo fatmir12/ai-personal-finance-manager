@@ -15,7 +15,10 @@ import { Card } from '@/components/ui/card'
 import Dialog from '@/components/ui/dialog.jsx'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { formatMoney } from '@/lib/financeFormatters.js'
+import {
+  formatFinanceMonth,
+  formatMoney,
+} from '@/lib/financeFormatters.js'
 import { useAuth } from '@/hooks/useAuth.js'
 import {
   createBudget,
@@ -105,10 +108,7 @@ function BudgetsPage() {
   const expenseCategories = categories.filter(
     (category) => category.type === 'EXPENSE'
   )
-  const monthLabel = new Intl.DateTimeFormat('bs-BA', {
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(year, month - 1, 1))
+  const monthLabel = `${formatFinanceMonth(new Date(year, month - 1, 1))} ${year}`
 
   const openCreateDialog = () => {
     setFormData({
@@ -246,7 +246,7 @@ function BudgetsPage() {
 
         <section className="planning-summary">
           <Card className="planning-summary-card planning-summary-feature">
-            <span>PLAN ZA {monthLabel.toLocaleUpperCase('bs-BA')}</span>
+            <span>PLAN ZA {monthLabel.toUpperCase()}</span>
             <strong>{isLoading ? '—' : formatMoney(totalLimit)}</strong>
             <p>Planirani iznos za odabrani mjesec</p>
             <div className="planning-summary-art" aria-hidden="true">
