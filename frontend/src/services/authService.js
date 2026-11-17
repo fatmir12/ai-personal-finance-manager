@@ -1,58 +1,9 @@
 
+import { ensureCsrfToken } from './csrfService.js'
+
 const AUTH_API = '/api/auth'
 
 let refreshPromise = null
-
-function getCsrfToken() {
-  const cookie = document.cookie
-    .split('; ')
-    .find((item) => item.startsWith('XSRF-TOKEN='))
-
-  if (!cookie) {
-    return null
-  }
-
-  return decodeURIComponent(
-    cookie.substring('XSRF-TOKEN='.length)
-  )
-}
-
-async function ensureCsrfToken() {
-  let token = getCsrfToken()
-
-  if (token) {
-    return token
-  }
-
-  let response
-
-  try {
-    response = await fetch(`${AUTH_API}/csrf`, {
-      method: 'GET',
-      credentials: 'same-origin',
-    })
-  } catch {
-    throw new Error(
-      'Nije moguće povezati se sa serverom.'
-    )
-  }
-
-  if (!response.ok) {
-    throw new Error(
-      'Nije moguće pripremiti sigurnosni token.'
-    )
-  }
-
-  token = getCsrfToken()
-
-  if (!token) {
-    throw new Error(
-      'CSRF token nije dostupan.'
-    )
-  }
-
-  return token
-}
 
 async function sendAuthRequest(endpoint, data) {
   const csrfToken = await ensureCsrfToken()
