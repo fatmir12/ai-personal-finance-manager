@@ -23,7 +23,7 @@ public record RecurringTransactionRequest(
 
         @NotBlank(message = "Učestalost je obavezna")
         @Pattern(
-                regexp = "DAILI|WEEKLY|MONTHLY",
+                regexp = "DAILY|WEEKLY|MONTHLY",
                 message = "Učestalost mora biti DAILY,WEEKLY ili MONTHLY"
         )
         String frequency,

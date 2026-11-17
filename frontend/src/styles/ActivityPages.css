@@ -1,0 +1,411 @@
+.activity-page .finance-page-header {
+  margin-top: 19px;
+}
+
+.activity-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.8fr);
+  gap: 13px;
+}
+
+.activity-summary-card {
+  position: relative;
+  min-height: 132px;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+  padding: 18px 22px;
+  border: 1px solid var(--app-border);
+  border-radius: 11px;
+  background: var(--app-paper);
+  box-shadow: 0 2px 6px rgb(34 49 37 / 2%);
+}
+
+.activity-summary-card > span {
+  color: var(--app-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.activity-summary-card > strong {
+  color: var(--app-forest);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.activity-summary-card > p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 9px;
+}
+
+.activity-summary-feature {
+  border-color: #244b3e;
+  background:
+    radial-gradient(ellipse at 92% 10%, rgb(108 143 112 / 28%), transparent 34%),
+    #19382f;
+}
+
+.activity-summary-feature > span,
+.activity-summary-feature > p {
+  color: #b7c8b9;
+}
+
+.activity-summary-feature > strong {
+  color: #fbfaf2;
+  font-size: 31px;
+}
+
+.activity-summary-art {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  display: grid;
+  width: 49px;
+  height: 49px;
+  place-items: center;
+  border: 1px solid rgb(215 229 138 / 24%);
+  border-radius: 15px;
+  color: var(--app-lime);
+  transform: translateY(-50%);
+}
+
+.activity-section-heading {
+  align-items: flex-end;
+}
+
+.activity-filter {
+  width: min(185px, 45%);
+}
+
+.activity-filter .finance-select {
+  background: var(--app-paper);
+}
+
+.recurring-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.recurring-card {
+  min-width: 0;
+  min-height: 207px;
+  gap: 12px;
+  padding: 16px 17px 13px;
+  border: 1px solid var(--app-border);
+  border-radius: 11px;
+  background: var(--app-paper);
+  box-shadow: 0 2px 6px rgb(34 49 37 / 2%);
+}
+
+.recurring-card-heading,
+.recurring-title-row,
+.recurring-detail-row,
+.recurring-card-actions {
+  display: flex;
+  align-items: center;
+}
+
+.recurring-card-heading {
+  justify-content: space-between;
+}
+
+.recurring-type-icon,
+.notification-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 10px;
+}
+
+.recurring-type-icon.is-income {
+  background: #eaf0e8;
+  color: #426d51;
+}
+
+.recurring-type-icon.is-expense {
+  background: #f6ece5;
+  color: #ae704a;
+}
+
+.recurring-status {
+  padding: 5px 8px;
+  border-radius: 20px;
+  background: #f1f2eb;
+  color: #7c867c;
+  font-size: 8px;
+}
+
+.recurring-status.is-active {
+  background: #e7f0e5;
+  color: #4a7450;
+}
+
+.recurring-title-row {
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.recurring-title-row > div {
+  min-width: 0;
+}
+
+.recurring-title-row h3 {
+  overflow: hidden;
+  margin: 0;
+  color: #35493b;
+  font-size: 12px;
+  font-weight: 620;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recurring-title-row p {
+  overflow: hidden;
+  margin: 4px 0 0;
+  color: #8c9389;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recurring-title-row > strong {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.recurring-title-row > strong.is-income {
+  color: #426d51;
+}
+
+.recurring-title-row > strong.is-expense {
+  color: #a56d4b;
+}
+
+.recurring-detail-row {
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid #eef0e9;
+  border-bottom: 1px solid #eef0e9;
+  color: #838b80;
+  font-size: 8px;
+}
+
+.recurring-detail-row > span:first-child {
+  color: #61745f;
+  font-weight: 620;
+}
+
+.recurring-detail-row .is-due {
+  color: #a45b3e;
+  font-weight: 620;
+}
+
+.recurring-card-actions {
+  gap: 4px;
+  margin-top: auto;
+}
+
+.recurring-card-actions button {
+  min-height: 30px;
+  color: #667368;
+  font-size: 8px;
+}
+
+.recurring-card-actions .activity-delete-action {
+  margin-left: auto;
+  color: #899187;
+}
+
+.activity-delete-action:hover {
+  color: #a3523b;
+}
+
+.notification-unread-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  background: var(--app-paper);
+  color: #6a796c;
+  font-size: 9px;
+}
+
+.notification-unread-counter svg {
+  color: #708765;
+}
+
+.notification-unread-counter strong {
+  color: var(--app-forest);
+  font-size: 12px;
+}
+
+.notification-section {
+  margin-top: 29px;
+}
+
+.notification-list {
+  overflow: hidden;
+  padding: 0 16px;
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  background: var(--app-paper);
+  box-shadow: 0 2px 6px rgb(34 49 37 / 2%);
+}
+
+.notification-item {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr) auto;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px 2px;
+  border-bottom: 1px solid #eef0e9;
+}
+
+.notification-item:last-child {
+  border-bottom: 0;
+}
+
+.notification-item.is-unread .notification-content h3 {
+  color: #284638;
+}
+
+.notification-icon {
+  margin-top: 2px;
+  background: #eaf0e8;
+  color: #56775a;
+}
+
+.notification-icon-budget_alert {
+  background: #f6ece5;
+  color: #a76e48;
+}
+
+.notification-icon-saving_goal {
+  background: #e7efeb;
+  color: #477269;
+}
+
+.notification-icon-recurring_transaction {
+  background: #eeeee4;
+  color: #70764c;
+}
+
+.notification-content {
+  min-width: 0;
+}
+
+.notification-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #768274;
+  font-size: 8px;
+}
+
+.notification-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #969b91;
+  white-space: nowrap;
+}
+
+.notification-content h3 {
+  margin: 8px 0 4px;
+  color: #57645a;
+  font-size: 11px;
+  font-weight: 640;
+}
+
+.notification-content p {
+  margin: 0;
+  color: #858d82;
+  font-size: 9px;
+  line-height: 1.65;
+}
+
+.notification-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.notification-actions button {
+  color: #859184;
+}
+
+.notification-actions button:hover {
+  color: #476d52;
+}
+
+.activity-action-error {
+  margin: 12px 0 0;
+  color: #a45b3e;
+  font-size: 9px;
+}
+
+@media (max-width: 760px) {
+  .recurring-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .activity-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-summary-card {
+    min-height: 112px;
+    padding: 15px 18px;
+  }
+
+  .activity-summary-card > strong,
+  .activity-summary-feature > strong {
+    font-size: 24px;
+  }
+
+  .activity-summary-art {
+    right: 17px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .notification-unread-counter {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .notification-item {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 9px;
+  }
+
+  .notification-list {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .notification-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .notification-date {
+    white-space: normal;
+  }
+}

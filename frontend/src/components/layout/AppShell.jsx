@@ -1,5 +1,6 @@
 import {
   ArrowLeftRight,
+  Bell,
   ChartNoAxesCombined,
   House,
   LogOut,
@@ -34,7 +35,13 @@ const navigationGroups = [
     items: [
       { label: 'Budžeti', icon: ChartNoAxesCombined, href: '/budgets' },
       { label: 'Ciljevi štednje', icon: Target, href: '/saving-goals' },
-      { label: 'Ponavljanja', icon: Repeat2 },
+      { label: 'Ponavljanja', icon: Repeat2, href: '/recurring-transactions' },
+    ],
+  },
+  {
+    label: 'AKTIVNOSTI',
+    items: [
+      { label: 'Obavijesti', icon: Bell, href: '/notifications' },
     ],
   },
   {
