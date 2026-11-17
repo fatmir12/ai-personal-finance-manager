@@ -186,10 +186,6 @@
 
   .app-sidebar-caption,
   .app-sidebar-bottom,
-  .app-navigation-group:not(:first-child) {
-    display: none;
-  }
-
   .app-navigation {
     display: flex;
     flex-direction: row;
