@@ -8,6 +8,7 @@ import {
   Plus,
   ShieldCheck,
   Sparkles,
+  Square,
   Trash2,
 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
@@ -112,6 +113,7 @@ function AiAssistantPage() {
   const startWithNewConversationRef = useRef(startWithNewConversation)
   const autoSendPromptRef = useRef(autoSendPrompt)
   const composerFormRef = useRef(null)
+  const sendingControllerRef = useRef(null)
   const selectedConversation = conversations.find(
     (conversation) =>
       String(conversation.id) === String(selectedConversationId)
@@ -269,6 +271,17 @@ function AiAssistantPage() {
     }
   }
 
+  const handleStopGenerating = () => {
+    if (!isSending) {
+      return
+    }
+
+    sendingControllerRef.current?.abort()
+    sendingControllerRef.current = null
+    setIsSending(false)
+    setMessageError('')
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     const content = composer.trim()
@@ -277,9 +290,21 @@ function AiAssistantPage() {
       return
     }
 
+    const optimisticMessage = {
+      id: `local-${Date.now()}`,
+      conversationId: selectedConversationId,
+      role: 'USER',
+      content,
+      createdAt: new Date().toISOString(),
+    }
+
     setMessageError('')
     setActionError('')
+    setComposer('')
+    setMessages((current) => [...current, optimisticMessage])
     setIsSending(true)
+    const controller = new AbortController()
+    sendingControllerRef.current = controller
     let conversation = selectedConversation
 
     try {
@@ -290,28 +315,31 @@ function AiAssistantPage() {
         )
         setConversationError('')
         setConversations((current) => [conversation, ...current])
+        skipMessageLoadFor.current = conversation.id
+        setSelectedConversationId(conversation.id)
       }
 
       const assistantMessage = await sendAiMessage(
         accessToken,
         conversation.id,
-        content
+        content,
+        { signal: controller.signal }
       )
       const userMessage = {
-        id: `local-${Date.now()}`,
+        id: optimisticMessage.id,
         conversationId: conversation.id,
         role: 'USER',
         content,
         createdAt: new Date().toISOString(),
       }
 
-      if (selectedConversationId === null) {
-        skipMessageLoadFor.current = conversation.id
-        setSelectedConversationId(conversation.id)
-        setMessages([userMessage, assistantMessage])
-      } else {
-        setMessages((current) => [...current, userMessage, assistantMessage])
-      }
+      setMessages((current) => [
+        ...current.filter((message) =>
+          String(message.id) !== String(optimisticMessage.id)
+        ),
+        userMessage,
+        assistantMessage,
+      ])
 
       const updatedConversation = {
         ...conversation,
@@ -325,15 +353,17 @@ function AiAssistantPage() {
           ),
         ]
       )
-      setComposer('')
     } catch (error) {
-      if (conversation && selectedConversationId === null) {
-        setMessages([])
-        setIsLoadingMessages(true)
-        setSelectedConversationId(conversation.id)
+      if (error.name !== 'AbortError') {
+        setMessages((current) => current.filter((message) =>
+          String(message.id) !== String(optimisticMessage.id)
+        ))
+        setMessageError(error.message || 'Poruku nije moguće poslati.')
       }
-      setMessageError(error.message || 'Poruku nije moguće poslati.')
     } finally {
+      if (sendingControllerRef.current === controller) {
+        sendingControllerRef.current = null
+      }
       setIsSending(false)
     }
   }
@@ -454,8 +484,8 @@ function AiAssistantPage() {
                   <Bot aria-hidden="true" size={19} />
                 </span>
                 <div>
-                  <strong>Saldo asistent</strong>
-                  <span><i /> Spreman za razgovor</span>
+                  <strong>Finansijski asistent</strong>
+                  <span><i /> Spreman za pitanje</span>
                 </div>
               </div>
               {selectedConversation && (
@@ -486,15 +516,14 @@ function AiAssistantPage() {
                   <span className="ai-welcome-icon">
                     <Sparkles aria-hidden="true" size={22} />
                   </span>
-                  <span className="ai-section-kicker">DOBRO DOŠAO U SALDO</span>
+                  <span className="ai-section-kicker">FINANSIJSKI PREGLED</span>
                   <h2>
-                    Finansijska slika,
+                    Sve o vašem novcu,
                     <br />
-                    <em>bez komplikovanja.</em>
+                    <em>na jednom mjestu.</em>
                   </h2>
                   <p>
-                    Pitaj o potrošnji, računima ili štednji. Odgovorit ću na
-                    osnovu podataka koje već pratiš u Saldu.
+                    Postavite pitanje o potrošnji, računima ili štednji.
                   </p>
                   <div className="ai-suggestions">
                     {suggestedQuestions.map((question) => (
@@ -528,7 +557,7 @@ function AiAssistantPage() {
                         )}
                         <div className="ai-message-body">
                           <div className="ai-message-meta">
-                            <strong>{isAssistant ? 'Saldo asistent' : 'Ti'}</strong>
+                            <strong>{isAssistant ? 'Finansijski asistent' : 'Vi'}</strong>
                             <time dateTime={message.createdAt}>
                               {formatTime(message.createdAt)}
                             </time>
@@ -587,19 +616,19 @@ function AiAssistantPage() {
                   <span className="ai-composer-hint">· Enter za slanje</span>
                 </span>
                 <Button
-                  aria-label="Pošalji poruku"
+                  aria-label={isSending ? 'Zaustavi odgovor' : 'Pošalji poruku'}
                   className="ai-send-button"
                   disabled={
-                    !composer.trim() ||
-                    isSending ||
+                    (!isSending && !composer.trim()) ||
                     isLoadingMessages ||
                     isLoadingConversations
                   }
+                  onClick={isSending ? handleStopGenerating : undefined}
                   size="icon"
-                  type="submit"
+                  type={isSending ? 'button' : 'submit'}
                 >
                   {isSending ? (
-                    <LoaderCircle aria-hidden="true" className="ai-spin" size={17} />
+                    <Square aria-hidden="true" size={15} fill="currentColor" />
                   ) : (
                     <ArrowUp aria-hidden="true" size={18} />
                   )}

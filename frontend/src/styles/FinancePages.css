@@ -570,9 +570,12 @@
 }
 
 .finance-dialog {
+  position: fixed;
+  inset: 0;
   width: min(100% - 32px, 460px);
   max-width: 460px;
   max-height: min(90vh, 760px);
+  margin: auto;
   padding: 0;
   overflow: visible;
   border: 1px solid #e6e8df;

@@ -133,13 +133,14 @@ export async function getAiMessages(accessToken, conversationId, { signal } = {}
   return result
 }
 
-export async function sendAiMessage(accessToken, conversationId, content) {
+export async function sendAiMessage(accessToken, conversationId, content, { signal } = {}) {
   const result = await request(
     `/ai/conversations/${conversationId}/chat`,
     accessToken,
     {
       method: 'POST',
       body: { content },
+      signal,
     }
   )
 

@@ -81,17 +81,17 @@ function AppShell({ children }) {
   return (
     <div className="app-shell">
       <aside className="app-sidebar">
-        <Link
-          aria-label="Saldo — početna"
-          className="app-brand"
-          to="/dashboard"
-        >
-          <span className="app-brand-mark">s</span>
-          <span className="app-brand-name">saldo</span>
-        </Link>
-
-        <div className="app-sidebar-caption">
-          LIČNE FINANSIJE
+        <div className="app-brand-line">
+          <Link
+            aria-label="MyWallet — početna"
+            className="app-brand"
+            to="/dashboard"
+          >
+            <span className="app-brand-name">MyWallet</span>
+          </Link>
+          <div className="app-sidebar-caption">
+            LIČNE FINANSIJE
+          </div>
         </div>
 
         <nav aria-label="Glavna navigacija" className="app-navigation">

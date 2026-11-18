@@ -86,6 +86,54 @@ public class FinancialContextService {
             }
         }
 
+        // Pojedinačne transakcije mjesečnog perioda
+        // Ove informacije omogućavaju AI asistentu da odgovori
+        // na pitanja o konkretnim izdacima i dobavljačima.
+        List<com.aifinance.backend.entity.Transaction> currentTransactions =
+                transactionRepository
+                        .findByUser_IdOrderByTransactionDateDescIdDesc(userId)
+                        .stream()
+                        .filter(transaction ->
+                                !transaction.getTransactionDate().isBefore(startDate)
+                                        && transaction.getTransactionDate().isBefore(endDate)
+                        )
+                        .limit(200)
+                        .toList();
+
+        StringBuilder transactionSummary = new StringBuilder();
+
+        if (currentTransactions.isEmpty()) {
+            transactionSummary.append(
+                    "Nema evidentiranih transakcija za ovaj mjesec.\n"
+            );
+        } else {
+            for (com.aifinance.backend.entity.Transaction transaction :
+                    currentTransactions) {
+                transactionSummary
+                        .append("- Datum: ")
+                        .append(transaction.getTransactionDate())
+                        .append("; Vrsta: ")
+                        .append(
+                                "INCOME".equals(transaction.getCategory().getType())
+                                        ? "prihod"
+                                        : "rashod"
+                        )
+                        .append("; Kategorija: ")
+                        .append(transaction.getCategory().getName())
+                        .append("; Iznos: ")
+                        .append(transaction.getAmount().toPlainString());
+
+                if (transaction.getDescription() != null
+                        && !transaction.getDescription().isBlank()) {
+                    transactionSummary
+                            .append("; Opis: ")
+                            .append(transaction.getDescription().trim());
+                }
+
+                transactionSummary.append("\n");
+            }
+        }
+
         // Budžeti
         List<Budget> budgets = budgetRepository
                 .findByUser_IdAndMonthAndYear(
@@ -270,6 +318,9 @@ public class FinancialContextService {
                 RASHODI PO KATEGORIJAMA:
                 %s
 
+                POJEDINAČNE TRANSAKCIJE ZA ODABRANI MJESEC:
+                %s
+
                 BUDŽETI ZA ODABRANI MJESEC:
                 %s
 
@@ -298,6 +349,7 @@ public class FinancialContextService {
                 expenses.toPlainString(),
                 netAmount.toPlainString(),
                 categorySummary.toString(),
+                transactionSummary.toString(),
                 budgetSummary.toString(),
                 savingGoalsSummary.toString(),
                 accountSummary.toString()
