@@ -28,6 +28,12 @@
   text-decoration: none;
 }
 
+.app-brand-line {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 34px;
+}
+
 .app-brand-mark {
   display: grid;
   width: 35px;
@@ -49,7 +55,7 @@
 }
 
 .app-sidebar-caption {
-  margin: 8px 0 34px 46px;
+  margin: 0;
   color: #9caca2;
   font-size: 9px;
   font-weight: 650;

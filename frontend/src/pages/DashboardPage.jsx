@@ -232,20 +232,20 @@ function DashboardPage() {
           </div>
         </section>
 
-        <section aria-label="Pitaj Saldo AI" className="dashboard-ai-search">
+        <section aria-label="Pitaj MyWallet asistenta" className="dashboard-ai-search">
           <div className="dashboard-ai-search-copy">
             <span className="dashboard-ai-mark">
               <Sparkles aria-hidden="true" size={17} />
             </span>
             <div>
-              <p className="dashboard-eyebrow">SALDO AI</p>
-              <h2>Pitaj o svojim finansijama.</h2>
+              <p className="dashboard-eyebrow">FINANSIJSKI ASISTENT</p>
+              <h2>Šta želite provjeriti?</h2>
               <span>Odgovori zasnovani na tvojim podacima.</span>
             </div>
           </div>
           <form className="dashboard-ai-search-form" onSubmit={handleAiSearch}>
             <label className="dashboard-ai-search-input">
-              <span className="sr-only">Pitanje za Saldo AI asistenta</span>
+              <span className="sr-only">Pitanje za MyWallet asistenta</span>
               <Search aria-hidden="true" size={17} />
               <input
                 maxLength={10000}
@@ -259,7 +259,7 @@ function DashboardPage() {
               disabled={!aiQuery.trim()}
               type="submit"
             >
-              Pitaj AI
+              Pošalji
               <ArrowRight aria-hidden="true" size={15} />
             </Button>
           </form>
@@ -281,8 +281,7 @@ function DashboardPage() {
             <Wallet size={29} strokeWidth={1.4} />
           </div>
           <div className="balance-banner-foot">
-            <span>Saldo svih računa</span>
-            <span className="balance-foot-mark">KM</span>
+            <span>Ukupno stanje svih računa</span>
           </div>
         </section>
 

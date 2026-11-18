@@ -5,6 +5,7 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router'
+import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -66,23 +67,16 @@ function LoginPage() {
 
   return (
     <main className="login-page">
-      <Card className="login-card">
-        <CardHeader className="login-header">
-          <div className="login-brand">
-            AI Finance Manager
-          </div>
+      <section className="login-panel">
+        <Card className="login-card">
+          <CardHeader className="login-header">
+            <CardTitle className="login-title">Dobro došli nazad</CardTitle>
+            <CardDescription className="login-description">
+              Unesite podatke za pristup svom računu.
+            </CardDescription>
+          </CardHeader>
 
-          <CardTitle className="login-title">
-            Prijava
-          </CardTitle>
-
-          <CardDescription className="login-description">
-            Prijavite se kako biste upravljali svojim
-            finansijama.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
+          <CardContent>
           {registrationSuccess && (
             <div
               className="login-success"
@@ -162,7 +156,8 @@ function LoginPage() {
             >
               {loading
                 ? 'Prijavljivanje...'
-                : 'Prijavi se'}
+                : 'Nastavi'}
+              {!loading && <ArrowRight aria-hidden="true" size={17} />}
             </Button>
           </form>
 
@@ -172,8 +167,9 @@ function LoginPage() {
               Registrujte se
             </Link>
           </p>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </section>
     </main>
   )
 }

@@ -1,6 +1,7 @@
 
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
+import { ArrowRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -80,23 +81,16 @@ function RegisterPage() {
 
   return (
     <main className="register-page">
-      <Card className="register-card">
-        <CardHeader className="register-header">
-          <div className="register-brand">
-            AI Finance Manager
-          </div>
+      <section className="register-panel">
+        <Card className="register-card">
+          <CardHeader className="register-header">
+            <CardTitle className="register-title">Kreirajte svoj profil</CardTitle>
+            <CardDescription className="register-description">
+              Potrebno je samo nekoliko osnovnih podataka.
+            </CardDescription>
+          </CardHeader>
 
-          <CardTitle className="register-title">
-            Registracija
-          </CardTitle>
-
-          <CardDescription className="register-description">
-            Kreirajte račun i počnite upravljati
-            svojim finansijama.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
+          <CardContent>
           <form
             className="register-form"
             onSubmit={handleSubmit}
@@ -193,7 +187,8 @@ function RegisterPage() {
             >
               {loading
                 ? 'Registracija u toku...'
-                : 'Registruj se'}
+                : 'Kreiraj račun'}
+              {!loading && <ArrowRight aria-hidden="true" size={17} />}
             </Button>
           </form>
 
@@ -203,8 +198,9 @@ function RegisterPage() {
               Prijavite se
             </Link>
           </p>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </section>
     </main>
   )
 }
