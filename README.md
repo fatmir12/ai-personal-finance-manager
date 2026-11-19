@@ -302,11 +302,7 @@ Main backend controller routes:
 
 Most financial routes require an authenticated user. The backend checks ownership of conversations and financial data so requests are scoped to the signed-in user.
 
-### AI and MCP integration
-
 The AI assistant uses **Ollama**, with `gemma3:4b` as the default model. The backend sends HTTP requests to Ollama's `/api/chat` endpoint. For financial questions, the backend first builds context from the signed-in user's database records. Direct questions about savings-goal progress can be answered by calculations in the backend.
-
-**MCP is not currently implemented in this repository.** There is no MCP client or MCP server in the application code; model communication goes directly through Ollama's HTTP API. The README therefore does not present MCP as an existing integration.
 
 ### Security and authentication
 
