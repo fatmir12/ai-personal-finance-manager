@@ -105,6 +105,3 @@ The backend application-context test connects to SQL Server, so the database mus
 - Enable the secure refresh-token cookie setting when serving the application over HTTPS.
 - Do not use real personal or financial data in public demos or screenshots.
 
-## License
-
-No license file is currently included. Add a license before publishing if you want to specify how others may use, modify or distribute this project.
