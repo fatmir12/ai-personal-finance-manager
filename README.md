@@ -410,7 +410,3 @@ frontend/
 docs/
   screenshots/    demo screenshots
 ```
-
-### License
-
-There is currently no license file in the repository. Add a license before publishing if you want to specify how others may use, modify, or distribute the project.
