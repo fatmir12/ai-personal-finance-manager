@@ -19,6 +19,10 @@ import java.util.List;
 
 @Service
 public class FinancialContextService {
+    private static final String[] BOSNIAN_MONTH_NAMES = {
+            "januar", "februar", "mart", "april", "maj", "juni",
+            "juli", "august", "septembar", "oktobar", "novembar", "decembar"
+    };
 
     private final TransactionRepository transactionRepository;
     private final BudgetRepository budgetRepository;
@@ -43,6 +47,11 @@ public class FinancialContextService {
             Long userId,
             YearMonth month
     ) {
+        String monthLabel =
+                "mjesec "
+                        + BOSNIAN_MONTH_NAMES[month.getMonthValue() - 1]
+                        + " "
+                        + month.getYear();
 
         LocalDate startDate = month.atDay(1);
         LocalDate endDate = month.plusMonths(1).atDay(1);
@@ -344,7 +353,7 @@ public class FinancialContextService {
                   tvrditi da korisnik sigurno nije trošio.
                 - Ne izmišljaj valute, iznose ili statuse.
                 """.formatted(
-                month,
+                monthLabel,
                 income.toPlainString(),
                 expenses.toPlainString(),
                 netAmount.toPlainString(),

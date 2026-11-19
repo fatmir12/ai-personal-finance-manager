@@ -6,7 +6,6 @@ import com.aifinance.backend.dto.AiFinancialResponse;
 import com.aifinance.backend.dto.AiMessageResponse;
 import com.aifinance.backend.entity.AiMessage;
 import com.aifinance.backend.repository.AiConversationRepository;
-import com.aifinance.backend.repository.AiMessageRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,13 +20,14 @@ import java.util.Map;
 @Service
 public class AiChatService {
 
-    private static final int MAX_HISTORY_MESSAGES = 6;
-
     // Osnovne instrukcije za AI asistenta
     private static final String SYSTEM_PROMPT =
             "Ti si AI asistent za upravljanje ličnim finansijama. " +
                     "Odgovaraj na bosanskom jeziku koristeći ijekavicu. " +
                     "Piši gramatički ispravno, jasno i prirodno. " +
+                    "Nazive mjeseci uvijek piši na bosanskom jeziku " +
+                    "(januar, februar, mart, april, maj, juni, juli, " +
+                    "august, septembar, oktobar, novembar, decembar). " +
                     "Koristi jednostavne i razumljive rečenice. " +
                     "Izbjegavaj neprirodne izraze i ponavljanje informacija. " +
                     "Finansijske podatke dobijaš od Spring Boot backenda. " +
@@ -57,7 +57,6 @@ public class AiChatService {
                     "Odgovor treba biti sadržajan, ali bez nepotrebnog teksta.";
 
     private final AiConversationRepository conversationRepository;
-    private final AiMessageRepository messageRepository;
     private final OllamaService ollamaService;
     private final AiChatPersistenceService persistenceService;
     private final AiChatRequestGuard requestGuard;
@@ -67,7 +66,6 @@ public class AiChatService {
 
     public AiChatService(
             AiConversationRepository conversationRepository,
-            AiMessageRepository messageRepository,
             OllamaService ollamaService,
             AiChatPersistenceService persistenceService,
             AiChatRequestGuard requestGuard,
@@ -76,7 +74,6 @@ public class AiChatService {
             AiFinancialAnswerService financialAnswerService
     ) {
         this.conversationRepository = conversationRepository;
-        this.messageRepository = messageRepository;
         this.ollamaService = ollamaService;
         this.persistenceService = persistenceService;
         this.requestGuard = requestGuard;
@@ -123,16 +120,11 @@ public class AiChatService {
                         );
             }
 
-            boolean includeHistory =
-                    !isAccountsQuestion(question)
-                            && !isSavingGoalsQuestion(question);
-
             return generateOllamaResponse(
                     conversationId,
                     question,
                     userId,
-                    financialContext,
-                    includeHistory
+                    financialContext
             );
 
         } finally {
@@ -194,8 +186,7 @@ public class AiChatService {
                         conversationId,
                         question,
                         userId,
-                        savingGoalContext,
-                        false
+                        savingGoalContext
                 );
             }
 
@@ -216,8 +207,7 @@ public class AiChatService {
             Long conversationId,
             String question,
             Long userId,
-            String financialContext,
-            boolean includeHistory
+            String financialContext
     ) {
 
         List<Map<String, String>> messages = new ArrayList<>();
@@ -256,33 +246,6 @@ public class AiChatService {
                         jasno navedi ograničenje.
                         """.formatted(financialContext)
         ));
-
-        // Dodavanje historije kada je potrebna
-        if (includeHistory) {
-
-            List<AiMessage> history = messageRepository
-                    .findByConversation_IdOrderByCreatedAtAscIdAsc(
-                            conversationId
-                    );
-
-            int startIndex = Math.max(
-                    0,
-                    history.size() - MAX_HISTORY_MESSAGES
-            );
-
-            for (int i = startIndex; i < history.size(); i++) {
-
-                AiMessage previousMessage = history.get(i);
-
-                if ("USER".equals(previousMessage.getRole())) {
-
-                    messages.add(Map.of(
-                            "role", "user",
-                            "content", previousMessage.getContent()
-                    ));
-                }
-            }
-        }
 
         String trimmedQuestion = question.trim();
 

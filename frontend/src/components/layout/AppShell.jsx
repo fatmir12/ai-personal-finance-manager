@@ -46,6 +46,7 @@ const navigationGroups = [
       { label: 'Obavijesti', icon: Bell, href: '/notifications' },
     ],
   },
+
   {
     label: 'ASISTENT',
     items: [

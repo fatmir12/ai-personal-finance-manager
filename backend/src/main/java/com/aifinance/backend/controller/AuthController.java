@@ -6,6 +6,8 @@ import com.aifinance.backend.dto.LoginRequest;
 import com.aifinance.backend.dto.LoginResponse;
 import com.aifinance.backend.dto.RefreshTokenRequest;
 import com.aifinance.backend.dto.RegisterRequest;
+import com.aifinance.backend.dto.ProfileResponse;
+import com.aifinance.backend.dto.ChangePasswordRequest;
 
 import com.aifinance.backend.service.AuthService;
 import com.aifinance.backend.service.RefreshTokenCookieService;
@@ -17,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -149,5 +153,26 @@ public class AuthController {
                         cookieService.deleteCookie().toString()
                 )
                 .build();
+    }
+
+    @GetMapping("/me")
+    public ProfileResponse getProfile(
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        Long userId = Long.valueOf(jwt.getSubject());
+        return authService.getProfile(userId);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        Long userId = Long.valueOf(jwt.getSubject());
+        authService.changePassword(userId, request);
+
+        return ResponseEntity.ok(
+                Map.of("message", "Lozinka je uspješno promijenjena")
+        );
     }
 }

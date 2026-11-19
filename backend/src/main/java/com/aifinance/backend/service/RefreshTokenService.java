@@ -67,6 +67,18 @@ public class RefreshTokenService {
         refreshTokenRepository.save(refreshToken);
     }
 
+    @Transactional
+    public void revokeAllRefreshTokens(User user) {
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+
+        refreshTokenRepository
+                .findByUserAndRevokedAtIsNull(user)
+                .forEach(refreshToken -> {
+                    refreshToken.setRevokedAt(now);
+                    refreshTokenRepository.save(refreshToken);
+                });
+    }
+
     private String hashToken(String token){
         try {
             MessageDigest digest=MessageDigest.getInstance("SHA-256");

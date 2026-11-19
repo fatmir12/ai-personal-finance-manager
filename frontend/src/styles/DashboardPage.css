@@ -25,6 +25,29 @@
   font-size: 11px;
 }
 
+.dashboard-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-profile-button {
+  height: 34px;
+  gap: 7px;
+  border-color: var(--app-border);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 72%);
+  color: var(--app-forest);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.dashboard-profile-button:hover {
+  border-color: #bcc8b4;
+  background: var(--app-paper);
+  color: #315441;
+}
+
 .dashboard-breadcrumb {
   gap: 10px;
 }
@@ -819,6 +842,22 @@
 }
 
 @media (max-width: 540px) {
+  .dashboard-topbar {
+    align-items: flex-start;
+  }
+
+  .dashboard-topbar-actions {
+    align-items: flex-end;
+  }
+
+  .dashboard-date {
+    display: none;
+  }
+
+  .dashboard-profile-button {
+    height: 32px;
+  }
+
   .dashboard-ai-search {
     gap: 11px;
     padding: 13px;
