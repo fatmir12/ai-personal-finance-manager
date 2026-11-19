@@ -3,6 +3,8 @@ package com.aifinance.backend.service;
 import com.aifinance.backend.dto.LoginResponse;
 import com.aifinance.backend.dto.RefreshTokenRequest;
 import com.aifinance.backend.dto.RegisterRequest;
+import com.aifinance.backend.dto.ProfileResponse;
+import com.aifinance.backend.dto.ChangePasswordRequest;
 import com.aifinance.backend.entity.User;
 import com.aifinance.backend.repository.UserRepository;
 import com.aifinance.backend.dto.LoginRequest;
@@ -80,6 +82,48 @@ public class AuthService {
                 refreshToken,
                 "Bearer"
         );
+    }
+
+    public ProfileResponse getProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Korisnički profil nije pronađen")
+                );
+
+        return new ProfileResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getCreatedAt()
+        );
+    }
+
+    @Transactional
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Korisnički profil nije pronađen")
+                );
+
+        if (!passwordEncoder.matches(
+                request.currentPassword(),
+                user.getPasswordHash()
+        )) {
+            throw new InvalidCredentialsException(
+                    "Trenutna lozinka nije ispravna"
+            );
+        }
+
+        if (passwordEncoder.matches(request.newPassword(), user.getPasswordHash())) {
+            throw new IllegalArgumentException(
+                    "Nova lozinka mora biti različita od trenutne lozinke"
+            );
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+        refreshTokenService.revokeAllRefreshTokens(user);
     }
 
     @Transactional

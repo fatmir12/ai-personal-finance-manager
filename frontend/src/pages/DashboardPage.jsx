@@ -9,6 +9,7 @@ import {
   RotateCw,
   Search,
   Sparkles,
+  UserRound,
   Wallet,
 } from 'lucide-react'
 import { useNavigate } from 'react-router'
@@ -212,9 +213,20 @@ function DashboardPage() {
             <i aria-hidden="true">/</i>
             <strong>Pregled</strong>
           </div>
-          <div className="dashboard-date">
-            <CalendarDays aria-hidden="true" size={15} />
-            <span>{todayLabel}</span>
+          <div className="dashboard-topbar-actions">
+            <div className="dashboard-date">
+              <CalendarDays aria-hidden="true" size={15} />
+              <span>{todayLabel}</span>
+            </div>
+            <Button
+              className="dashboard-profile-button"
+              onClick={() => navigate('/profile')}
+              type="button"
+              variant="outline"
+            >
+              <UserRound aria-hidden="true" size={16} />
+              Moj profil
+            </Button>
           </div>
         </header>
 
