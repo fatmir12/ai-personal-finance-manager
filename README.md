@@ -104,11 +104,9 @@ Osnovne rute backend kontrolera:
 
 Većina finansijskih ruta zahtijeva autentifikovanog korisnika. Backend provjerava vlasništvo nad razgovorima i finansijskim podacima kako bi zahtjev bio ograničen na prijavljenog korisnika.
 
-### AI i MCP integracija
+### AI integracija
 
 AI asistent koristi **Ollamu**, podrazumijevano s modelom `gemma3:4b`. Backend šalje HTTP zahtjev na Ollama `/api/chat` endpoint. Za pitanja koja se odnose na konkretne finansijske podatke backend prvo priprema kontekst iz baze za prijavljenog korisnika; direktni odgovori o napretku cilja štednje mogu se izračunati u backendu.
-
-**MCP trenutno nije implementiran u ovom repozitoriju.** Nema MCP klijenta niti MCP servera u aplikacijskom kodu; komunikacija s modelom ide direktno preko Ollama HTTP API-ja. Zbog toga se MCP ne predstavlja kao postojeća integracija.
 
 ### Sigurnost i autentifikacija
 
@@ -212,12 +210,6 @@ frontend/
 docs/
   screenshots/    demo snimci ekrana
 ```
-
-### Licenca
-
-U repozitoriju trenutno nema licence. Dodaj licencu prije objave ako želiš jasno definisati uslove korištenja, izmjene i distribucije projekta.
-
----
 
 ## English
 
